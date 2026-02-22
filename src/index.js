@@ -58,7 +58,12 @@ function callZaiApi(apiKey, model, prompt) {
       res.on('end', () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           const parsed = JSON.parse(data);
-          resolve(parsed.choices[0].message.content);
+          const content = parsed.choices?.[0]?.message?.content;
+          if (!content) {
+            reject(new Error(`Z.ai API returned an empty response: ${data}`));
+          } else {
+            resolve(content);
+          }
         } else {
           reject(new Error(`Z.ai API error ${res.statusCode}: ${data}`));
         }
