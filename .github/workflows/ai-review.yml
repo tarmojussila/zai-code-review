@@ -5,16 +5,18 @@ on:
     types: [opened, synchronize]
 
 permissions:
+  contents: read
   pull-requests: write
 
 jobs:
   review:
+    name: Review
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Code Review
-        uses: tarmojussila/zai-code-review@v1
+        uses: tarmojussila/zai-code-review@main
         with:
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
           ZAI_MODEL: ${{ vars.ZAI_MODEL }}
