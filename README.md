@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Code Review
-        uses: tarmojussila/zai-code-review@main
+        uses: tarmojussila/zai-code-review@v0.1.1
         with:
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
 ```
