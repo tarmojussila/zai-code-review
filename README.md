@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: tarmojussila/zai-code-review@v1
+      - uses: tarmojussila/zai-code-review@main
         with:
           api_key: ${{ secrets.ZAI_API_KEY }}
 ```
