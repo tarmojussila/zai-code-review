@@ -8,6 +8,10 @@ inputs:
     description: "Z.ai AI model"
     required: false
     default: "glm-4.7"
+  GITHUB_TOKEN:
+    description: "GitHub token for API access"
+    required: false
+    default: ${{ github.token }}
 runs:
   using: "node20"
   main: "dist/index.js"
