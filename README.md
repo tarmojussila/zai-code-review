@@ -20,6 +20,10 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -27,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: tarmojussila/zai-code-review@main
         with:
-          api_key: ${{ secrets.ZAI_API_KEY }}
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
 ```
 
 ## Configuration
