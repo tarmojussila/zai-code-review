@@ -34,6 +34,13 @@ jobs:
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
 ```
 
+## Inputs
+
+| Input | Required | Default | Description |
+|---|---|---|---|
+| `ZAI_API_KEY` | Yes | — | Your Z.ai API key |
+| `ZAI_MODEL` | No | `glm-4.7` | Z.ai model to use for review |
+
 ## Configuration
 
 To use this action, you must add your Z.ai API key as a GitHub secret.
