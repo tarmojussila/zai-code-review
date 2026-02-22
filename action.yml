@@ -1,0 +1,16 @@
+name: "Z.ai Code Review"
+description: "AI-powered PR code review using Z.ai models"
+inputs:
+  ZAI_API_KEY:
+    description: "Z.ai API key"
+    required: true
+  ZAI_MODEL:
+    description: "Z.ai AI model"
+    required: false
+    default: "glm-4.7"
+runs:
+  using: "node20"
+  main: "dist/index.js"
+branding:
+  icon: "check-circle"
+  color: "black"
