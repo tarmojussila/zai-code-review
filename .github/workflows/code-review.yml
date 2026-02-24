@@ -16,7 +16,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Code Review
-        uses: tarmojussila/zai-code-review@v0.1.1
+        uses: tarmojussila/zai-code-review@feature/configurable-system-prompt
         with:
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
           ZAI_MODEL: ${{ vars.ZAI_MODEL }}
+          ZAI_SYSTEM_PROMPT: ${{ vars.ZAI_SYSTEM_PROMPT }}
