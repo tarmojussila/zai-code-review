@@ -31860,14 +31860,14 @@ function buildPrompt(files) {
   return `Please review the following pull request changes and provide concise, constructive feedback. Focus on bugs, logic errors, security issues, and meaningful improvements. Skip trivial style comments.\n\n${diffs}`;
 }
 
-function callZaiApi(apiKey, model, prompt) {
+function callZaiApi(apiKey, model, systemPrompt, prompt) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
       model,
       messages: [
         {
           role: 'system',
-          content: 'You are an expert code reviewer. Review the provided code changes and give clear, actionable feedback.',
+          content: systemPrompt,
         },
         {
           role: 'user',
@@ -31914,7 +31914,9 @@ function callZaiApi(apiKey, model, prompt) {
 
 async function run() {
   const apiKey = core.getInput('ZAI_API_KEY', { required: true });
+  core.setSecret(apiKey);
   const model = core.getInput('ZAI_MODEL') || 'glm-4.7';
+  const systemPrompt = core.getInput('ZAI_SYSTEM_PROMPT') || 'You are an expert code reviewer. Review the provided code changes and give clear, actionable feedback.';
   const token = core.getInput('GITHUB_TOKEN') || process.env.GITHUB_TOKEN;
 
   const { context } = github;
@@ -31939,7 +31941,7 @@ async function run() {
   const prompt = buildPrompt(files);
 
   core.info(`Sending ${files.length} file(s) to Z.ai for review...`);
-  const review = await callZaiApi(apiKey, model, prompt);
+  const review = await callZaiApi(apiKey, model, systemPrompt, prompt);
   const body = `## Z.ai Code Review\n\n${review}\n\n${COMMENT_MARKER}`;
 
   const { data: comments } = await octokit.rest.issues.listComments({
