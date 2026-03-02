@@ -79,9 +79,9 @@ function callZaiApi(apiKey, model, systemPrompt, prompt) {
 async function run() {
   const apiKey = core.getInput('ZAI_API_KEY', { required: true });
   core.setSecret(apiKey);
-  const model = core.getInput('ZAI_MODEL') || 'glm-4.7';
-  const systemPrompt = core.getInput('ZAI_SYSTEM_PROMPT') || 'You are an expert code reviewer. Review the provided code changes and give clear, actionable feedback.';
-  const reviewerName = core.getInput('ZAI_REVIEWER_NAME') || 'Z.ai Code Review';
+  const model = core.getInput('ZAI_MODEL');
+  const systemPrompt = core.getInput('ZAI_SYSTEM_PROMPT');
+  const reviewerName = core.getInput('ZAI_REVIEWER_NAME');
   const token = core.getInput('GITHUB_TOKEN') || process.env.GITHUB_TOKEN;
 
   const { context } = github;
