@@ -4,14 +4,24 @@ const https = require('https');
 
 const ZAI_API_URL = 'https://api.z.ai/api/coding/paas/v4/chat/completions';
 const COMMENT_MARKER = '<!-- zai-code-review -->';
+const MAX_RESPONSE_SIZE = 1024 * 1024;
+const REQUEST_TIMEOUT_MS = 300_000;
 
 async function getChangedFiles(octokit, owner, repo, pullNumber) {
-  const { data: files } = await octokit.rest.pulls.listFiles({
-    owner,
-    repo,
-    pull_number: pullNumber,
-    per_page: 100,
-  });
+  const files = [];
+  let page = 1;
+  while (true) {
+    const { data } = await octokit.rest.pulls.listFiles({
+      owner,
+      repo,
+      pull_number: pullNumber,
+      per_page: 100,
+      page,
+    });
+    files.push(...data);
+    if (data.length < 100) break;
+    page++;
+  }
   return files;
 }
 
@@ -54,23 +64,37 @@ function callZaiApi(apiKey, model, systemPrompt, prompt) {
 
     const req = https.request(options, res => {
       let data = '';
-      res.on('data', chunk => (data += chunk));
+      res.on('data', chunk => {
+        data += chunk;
+        if (data.length > MAX_RESPONSE_SIZE) {
+          req.destroy(new Error('Z.ai API response exceeded size limit.'));
+        }
+      });
       res.on('end', () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          const parsed = JSON.parse(data);
+          let parsed;
+          try {
+            parsed = JSON.parse(data);
+          } catch {
+            reject(new Error('Z.ai API returned invalid JSON.'));
+            return;
+          }
           const content = parsed.choices?.[0]?.message?.content;
           if (!content) {
-            reject(new Error(`Z.ai API returned an empty response: ${data}`));
+            reject(new Error('Z.ai API returned an empty response.'));
           } else {
             resolve(content);
           }
         } else {
-          reject(new Error(`Z.ai API error ${res.statusCode}: ${data}`));
+          reject(new Error(`Z.ai API error ${res.statusCode}: ${data.slice(0, 200)}`));
         }
       });
     });
 
     req.on('error', reject);
+    req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+      req.destroy(new Error('Z.ai API request timed out.'));
+    });
     req.write(body);
     req.end();
   });
