@@ -31918,7 +31918,8 @@ async function run() {
   const model = core.getInput('ZAI_MODEL');
   const systemPrompt = core.getInput('ZAI_SYSTEM_PROMPT');
   const reviewerName = core.getInput('ZAI_REVIEWER_NAME');
-  const token = core.getInput('GITHUB_TOKEN') || process.env.GITHUB_TOKEN;
+  const token = core.getInput('GITHUB_TOKEN');
+  core.setSecret(token);
 
   const { context } = github;
   const { owner, repo } = context.repo;
