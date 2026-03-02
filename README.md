@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Code Review
-        uses: tarmojussila/zai-code-review@v0.2.0
+        uses: tarmojussila/zai-code-review@v0.3.0
         with:
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
 ```
@@ -89,7 +89,7 @@ Instead of using default values for `ZAI_MODEL`, `ZAI_SYSTEM_PROMPT`, and `ZAI_R
 
 ```yaml
       - name: Code Review
-        uses: tarmojussila/zai-code-review@v0.2.0
+        uses: tarmojussila/zai-code-review@v0.3.0
         with:
           ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
           ZAI_MODEL: ${{ vars.ZAI_MODEL }}
